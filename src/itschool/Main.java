@@ -88,7 +88,6 @@ public class Main
                 {
                     pkg.close();
                 }
-
             } catch (FileNotFoundException | InvalidFormatException e)
             {
                 System.out.println(e.getLocalizedMessage());
