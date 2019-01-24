@@ -1,5 +1,8 @@
 package itschool;
 
+import java.util.Currency;
+import java.util.Locale;
+
 public class Item
 {
     int id;
@@ -53,10 +56,14 @@ public class Item
     @Override
     public String toString()
     {
+        Locale locale=new Locale("uk_ua", "UA") ;//("en", "US");
+        Currency currency=Currency.getInstance(locale);
+        String symbol = currency.getSymbol();
+
         if (this.model == "")
-            return String.format("%10d", id) + "\t" + String.format("%-60s", title) + "\t" + String.format("%20.1f", price);
+            return String.format("%10d", id) + "\t" + String.format("%-60s", title) + "\t" + String.format("%20.1f", price) + ' ' + symbol;
         else
             return String.format("%10d", id) + "\t" + String.format("%-60s", this.producer + " " + this.model) + "\t" + this.volume + "ml\t" + String.format(
-                    "%20.1f", price);
+                    "%20.1f", price) + ' ' + symbol;
     }
 }

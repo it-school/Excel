@@ -12,7 +12,10 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.text.NumberFormat;
 import java.util.ArrayList;
+import java.util.Currency;
+import java.util.Locale;
 
 public class Main
 {
@@ -97,5 +100,14 @@ public class Main
         {
             System.out.println(e.getLocalizedMessage());
         }
+/*
+        for (Locale locale : Locale.getAvailableLocales()) {
+            try {
+                Currency currency = Currency.getInstance(locale);
+                System.out.println(locale + " / " + currency);
+            } catch (Exception e) {
+            }
+        }
+*/
     }
 }
