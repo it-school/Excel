@@ -54,9 +54,9 @@ public class Item
     public String toString()
     {
         if (this.model == "")
-            return String.format("%10d", id) + "\t" + String.format("%-100s", title) + "\t" + String.format("%20.1f", price);
+            return String.format("%10d", id) + "\t" + String.format("%-60s", title) + "\t" + String.format("%20.1f", price);
         else
-            return String.format("%10d", id) + "\t" + String.format("%-100s", this.producer + " " + this.model) + "\t" + this.volume + "ml\t" + String.format(
+            return String.format("%10d", id) + "\t" + String.format("%-60s", this.producer + " " + this.model) + "\t" + this.volume + "ml\t" + String.format(
                     "%20.1f", price);
     }
 }
