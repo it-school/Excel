@@ -15,13 +15,13 @@ import java.util.ArrayList;
 
 public class Main
 {
-
     public static void main(String[] args)
     {
         Workbook wb = null;
-        String filename = "a:\\pricefull.xls";
+        String filename = "price.xls";
+//        filename = "price.xlsx";
         OPCPackage pkg = null;
-        boolean isXLSX = (filename.contains("xlsx") ? true : false);
+        boolean isXLSX = (filename.endsWith("xlsx") ? true : false);
         ArrayList<Item> pricelist = new ArrayList<>();
 
         try
@@ -90,11 +90,11 @@ public class Main
         }
         catch (FileNotFoundException | InvalidFormatException e)
         {
-            e.printStackTrace();
+            System.out.println(e.getLocalizedMessage());
         }
         catch (IOException e)
         {
-            e.printStackTrace();
+            System.out.println(e.getLocalizedMessage());
         }
     }
 }
