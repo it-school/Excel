@@ -1,7 +1,5 @@
 package itschool;
 
-// https://poi.apache.org/components/spreadsheet/quick-guide.html
-
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.openxml4j.opc.OPCPackage;
@@ -23,26 +21,27 @@ public class Main
         String filename = "price.xls";
 //        filename = "price.xlsx";
         OPCPackage pkg = null;
-        boolean isXLSX = (filename.endsWith("xlsx") ? true : false);
-        ArrayList<Item> pricelist = new ArrayList<>();
-
-        try
+        if (filename.endsWith("xlsx") || filename.endsWith("xls"))
         {
-            InputStream inp = new FileInputStream(filename);
+            boolean isXLSX = (filename.endsWith("xlsx") ? true : false);
+            ArrayList<Item> pricelist = new ArrayList<>();
 
-            if (isXLSX)
+            try
             {
-                // XSSFWorkbook, File (slower, but uses less memory)
+                InputStream inp = new FileInputStream(filename);
+
+                if (isXLSX)
+                {
+                    // XSSFWorkbook, File (slower, but uses less memory)
 //                pkg = OPCPackage.open(new File(filename));
 
-                // XSSFWorkbook, InputStream, faster, but needs more memory
-                pkg = OPCPackage.open(inp);
-
-                wb = new XSSFWorkbook(pkg);
-            }
-            else
-            {
-                wb = new HSSFWorkbook(new POIFSFileSystem(inp));
+                    // XSSFWorkbook, InputStream, faster, but needs more memory
+                    pkg = OPCPackage.open(inp);
+                    wb = new XSSFWorkbook(pkg);
+                }
+                else
+                {
+                    wb = new HSSFWorkbook(new POIFSFileSystem(inp));
 
                 /*
                 ExcelExtractor extractor = new ExcelExtractor(wb);
@@ -51,17 +50,18 @@ public class Main
                 String text = extractor.getText();
                 System.out.println(text);
                 */
-            }
+                }
 
-            Item item = new Item();
-            Cell cell;
-            int id;
-            String title;
-            double price;
-            for (Sheet sheet : wb)
-            {
-                for (Row row : sheet)
+                Item item = new Item();
+                Cell cell;
+                int id;
+                String title;
+                double price;
+
+                for (Sheet sheet : wb)
                 {
+                    for (Row row : sheet)
+                    {
                     /*
                     for (Cell cell : row)
                     {
@@ -69,34 +69,37 @@ public class Main
                     }
                     System.out.println();
 */
-                    cell = row.getCell(0);
-                    if (cell != null && cell.getCellType() == CellType.NUMERIC)
-                    {
-                        id = (int)cell.getNumericCellValue();
-                        title = row.getCell(1).getStringCellValue();
-                        price = row.getCell(2).getNumericCellValue();
-                        item = new Item(id, title, price);
-                        item.tryToConvert();
-                        pricelist.add(item);
-                        System.out.println(item.toString());
+                        cell = row.getCell(0);
+                        if (cell != null && cell.getCellType() == CellType.NUMERIC)
+                        {
+                            id = (int) cell.getNumericCellValue();
+                            title = row.getCell(1).getStringCellValue();
+                            price = row.getCell(2).getNumericCellValue();
+                            item = new Item(id, title, price);
+                            item.tryToConvert();
+                            pricelist.add(item);
+                            System.out.println(item.toString());
+                        }
                     }
                 }
-            }
-            wb.close();
+                wb.close();
 
-            if (pkg != null)
+                if (pkg != null)
+                {
+                    pkg.close();
+                }
+
+            } catch (FileNotFoundException | InvalidFormatException e)
             {
-                pkg.close();
+                System.out.println(e.getLocalizedMessage());
+            } catch (IOException e)
+            {
+                System.out.println(e.getLocalizedMessage());
             }
-
         }
-        catch (FileNotFoundException | InvalidFormatException e)
+        else
         {
-            System.out.println(e.getLocalizedMessage());
-        }
-        catch (IOException e)
-        {
-            System.out.println(e.getLocalizedMessage());
+            System.out.println("Given file is NOT Microsoft Excel file!");
         }
     }
 }

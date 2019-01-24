@@ -8,6 +8,7 @@ public class Item
     int id;
     String title;
     double price;
+
     String producer;
     String model;
     int volume;
