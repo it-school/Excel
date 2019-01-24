@@ -56,7 +56,17 @@ public class Item
     @Override
     public String toString()
     {
-        Locale locale=new Locale("uk_ua", "UA") ;//("en", "US");
+        /*
+        for (Locale locale : Locale.getAvailableLocales()) {
+            try {
+                Currency currency = Currency.getInstance(locale);
+                System.out.println(locale + " / " + currency);
+            } catch (Exception e) {
+            }
+        }
+*/
+        Locale locale = new Locale("uk_ua", "UA"); //("en", "US");
+        // Locale locale=Locale.getDefault();
         Currency currency=Currency.getInstance(locale);
         String symbol = currency.getSymbol();
 
