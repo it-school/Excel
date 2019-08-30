@@ -35,8 +35,7 @@ public class Main
 //                pkg = OPCPackage.open(new File(filename));
 
                     // XSSFWorkbook, InputStream, faster, but needs more memory
-                    pkg = OPCPackage.open(inp);
-                    wb = new XSSFWorkbook(pkg);
+                    wb = new XSSFWorkbook(OPCPackage.open(inp));
                 }
                 else
                 {
@@ -85,7 +84,7 @@ public class Main
                             item = new Item(id, title, sklad, rosnichPrice, optPrice, dilPrice, gar);
                             item.tryToConvert();
                             pricelist.add(item);
-                            System.out.println(item.toString());
+                            // System.out.println(item.toString());
                         }
                     }
                 }
@@ -104,8 +103,12 @@ public class Main
             }
             System.out.println("\n\n\n\n\n\n");
             System.out.println(SearchByTitle(pricelist, "USB"));
+
             System.out.println(SearchByPrice(pricelist, 30));
-            System.out.println(SearchByPrice(SearchByTitle(pricelist, "Logitech"), 30));
+
+            ArrayList<Item> Logitech_cheaper_200 = SearchByPrice(SearchByTitle(pricelist, "Logitech"), 200);
+            for (Item item : Logitech_cheaper_200)
+                System.out.println(item);
         } else
         {
             System.out.println("Given file is NOT Microsoft Excel file!");
@@ -116,7 +119,7 @@ public class Main
         ArrayList<Item> temp = new ArrayList<>();
         for (Item item : pricelist) {
             if (item.rosnichPrice < rosnichPrice) {
-                System.out.println(item);
+                //System.out.println(item);
                 temp.add(item);
             }
         }
@@ -127,9 +130,8 @@ public class Main
     public static ArrayList<Item> SearchByTitle(ArrayList<Item> pricelist, String title) {
         ArrayList<Item> temp = new ArrayList<>();
         for (Item item : pricelist) {
-
             if (item.title.contains(title)) {
-                System.out.println(item);
+                //System.out.println(item);
                 temp.add(item);
             }
         }
