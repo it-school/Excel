@@ -7,52 +7,52 @@ public class Item
 {
     int id;
     String title;
-    double price;
+    String sklad;
+    double rosnichPrice;
+    double optPrice;
+    double dilPrice;
+    double gar;
 
-    String producer;
-    String model;
-    int volume;
-    boolean isTester;
-    boolean isForMen;
+
 
     public Item()
     {
         this.id = -1;
+        this.gar = -1;
+        this.dilPrice = -1;
+        this.optPrice = -1;
+        this.rosnichPrice = -1;
         this.title = "";
-        this.price = -1;
-        this.producer = "";
-        this.model = "";
-        this.volume = -1;
-        this.isForMen = false;
-        this.isTester = false;
+        this.sklad = "";
     }
 
-    public Item(int id, String title, double price)
+    public Item(int id, String title, String sklad, double rosnichPrice, double optPrice, double dilPrice, double gar)
     {
         this.id = id;
+        this.sklad = sklad;
+        this.rosnichPrice = rosnichPrice;
+        this.optPrice = optPrice;
+        this.gar = gar;
+        this.dilPrice = dilPrice;
         this.title = title;
-        this.price = price;
-        this.producer = "";
-        this.model = "";
-        this.volume = -1;
-        this.isForMen = false;
-        this.isTester = false;
     }
 
     boolean tryToConvert()
     {
         boolean result = false;
         String tempTitle = this.title.trim();
-        if (tempTitle.contains("   ") && tempTitle.contains("ml"))
+        /*if (tempTitle.contains("   ") && tempTitle.contains("ml"))
         {
             this.model = tempTitle.substring(tempTitle.indexOf("   "), tempTitle.indexOf(" ",
                                                                                          tempTitle.indexOf(tempTitle.contains("edt")?"edt":
                                                                                                                    tempTitle.contains("edp") ? "edp" : "ml"))-3);
             //this.volume = Integer.parseInt(tempTitle.substring(tempTitle.indexOf("ml")-2, tempTitle.indexOf( "ml")));
         }
+        */
 
         return result;
     }
+
 
     @Override
     public String toString()
@@ -71,10 +71,12 @@ public class Item
         Currency currency=Currency.getInstance(locale);
         String symbol = currency.getSymbol();
 
-        if (this.model == "")
-            return String.format("%10d", id) + "\t" + String.format("%-60s", title) + "\t" + String.format("%20.1f", price) + ' ' + symbol;
-        else
-            return String.format("%10d", id) + "\t" + String.format("%-60s", this.producer + " " + this.model) + "\t" + this.volume + "ml\t" + String.format(
-                    "%20.1f", price) + ' ' + symbol;
+
+        return String.format("%10d", id) + "\t" + String.format("%-200s", this.title) + "\t" + this.sklad + "\t" + String.format(
+                "%20.1f", rosnichPrice) + ' ' + symbol + "\t" + String.format(
+                "%20.1f", optPrice) + ' ' + symbol + "\t" + String.format(
+                "%20.1f", dilPrice) + ' ' + symbol + "\t" + String.format(
+                "%10.0f", gar);
+
     }
 }
