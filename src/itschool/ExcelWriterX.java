@@ -2,22 +2,16 @@ package itschool;
 
 import com.psec.excel.WriteExcel;
 
+// http://gael-home.appspot.com/home/gael-home.htm
 public class ExcelWriterX extends WriteExcel
 {
-
 	WriteExcel wrtExcel;
 
-	public static Exception e(String s)
-	{
-		return new Exception(s);
-	}
-
-	// ---------------------- Mainline ----------------------
 	public void run(String args) throws Exception
 	{
 		System.out.println("Excel writing stated: " + args);
 		wrtExcel = WriteExcel.create(this, args);
-		//wrtExcel.setNegativeFormat(true, "");
+		wrtExcel.setNegativeFormat(true, "");
 
 		writeSalesSheet();
 
@@ -28,8 +22,7 @@ public class ExcelWriterX extends WriteExcel
 
 	private void writeSalesSheet() throws Exception
 	{
-
-		String sheet = "sample-sales";
+		String sheet = "Sales_sample";
 		Area area = wrtExcel.createArea(sheet, 1, 1)
 				.header("{4.#title}Sample Sales Report")
 				.header("")
