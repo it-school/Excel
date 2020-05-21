@@ -14,6 +14,19 @@ public class Main
 {
 	public static void main(String[] args) throws Exception
 	{
+//		excelRead();
+		writeExcel();
+		return;
+	}
+
+	private static void writeExcel() throws Exception
+	{
+		ExcelWriterX writexls = new ExcelWriterX();
+		writexls.run("test.xlsx");
+	}
+
+	private static void excelRead()
+	{
 		long start = System.currentTimeMillis();
 
 		Workbook wb = null;
@@ -124,10 +137,5 @@ public class Main
 		else {
 			System.out.println("Given file is NOT Microsoft Excel file!");
 		}
-
-		/*
-		ExcelWriterX writexls = new ExcelWriterX();
-		writexls.run(new String[]{"test.xlsx"});
-		 */
 	}
 }

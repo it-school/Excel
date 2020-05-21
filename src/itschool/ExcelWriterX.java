@@ -12,34 +12,18 @@ public class ExcelWriterX extends WriteExcel
 		return new Exception(s);
 	}
 
-	public static void main(String[] args)
-	{
-		try {
-			ExcelWriterX helloExcel = new ExcelWriterX();
-			helloExcel.run(args);
-		}
-		catch (Exception e) {
-			log("HelloExcel Croaked:" + e);
-		}
-	}
-
 	// ---------------------- Mainline ----------------------
-	public void run(String[] args) throws Exception
+	public void run(String args) throws Exception
 	{
-		log("HelloExcel writing " + args[0]);
-		wrtExcel = WriteExcel.create(this, args[0]);
-		wrtExcel.setNegativeFormat(true, "");
+		System.out.println("Excel writing stated: " + args);
+		wrtExcel = WriteExcel.create(this, args);
+		//wrtExcel.setNegativeFormat(true, "");
 
 		writeSalesSheet();
 
 		wrtExcel.close();
 		wrtExcel = null;
-		log("HelloExcel completed writing " + args[0]);
-	}
-
-	public static void log(String msg)
-	{
-		System.out.println(msg);
+		System.out.println("Excel writing completed" + args);
 	}
 
 	private void writeSalesSheet() throws Exception
