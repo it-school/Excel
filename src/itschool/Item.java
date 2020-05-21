@@ -27,7 +27,6 @@ public class Item
 		this.sklad = "";
 	}
 
-
 	public Item(int id, String title, String sklad, double rosnichPrice, double optPrice, double dilPrice, double gar)
 	{
 		this.id = id;
