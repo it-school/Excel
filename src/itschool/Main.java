@@ -90,18 +90,23 @@ public class Main {
             System.out.println(e.getLocalizedMessage());
          }
 
-         printList("\n-------------------- Items with keyword: \"USB\" --------------------\n", SearchByTitle(pricelist, "USB"));
+//         printList("\n-------------------- All Items --------------------\n", pricelist);
 
-         printList("\n-------------------- Items with price under 30 --------------------\n", SearchByPrice(pricelist, 30));
 
-         ArrayList<Item> Logitech_cheaper_200 = SearchByPrice(SearchByTitle(pricelist, "Logitech"), 200);
+//         printList("\n-------------------- Items with keyword: \"USB\" --------------------\n", SearchByTitle(pricelist, "USB"));
+
+//         printList("\n-------------------- Items with price under 30 --------------------\n", SearchByPriceLower(pricelist, 30));
+//
+         ArrayList<Item> Logitech_cheaper_200 = SearchByPriceLower(SearchByTitle(pricelist, "Logitech"), 200);
          printList("\n-------------------- Items with keyword: \"Logitech\" and price under 200 --------------------\n", Logitech_cheaper_200);
+
+
       } else {
          System.out.println("Given file is NOT Microsoft Excel file!");
       }
    }
 
-   public static ArrayList<Item> SearchByPrice(ArrayList<Item> pricelist, double rosnichPrice) {
+   public static ArrayList<Item> SearchByPriceLower(ArrayList<Item> pricelist, double rosnichPrice) {
       ArrayList<Item> temp = new ArrayList<>();
       for (Item item : pricelist) {
          if (item.rosnichPrice < rosnichPrice) {
