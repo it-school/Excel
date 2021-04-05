@@ -28,7 +28,7 @@ public class Main {
 
             if (isXLSX) {
                // XSSFWorkbook, File (slower, but uses less memory)
-//                pkg = OPCPackage.open(new File(filename));
+//             pkg = OPCPackage.open(new File(filename));
 
                // XSSFWorkbook, InputStream, faster, but needs more memory
                pkg = OPCPackage.open(inp);
