@@ -13,33 +13,28 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 
-public class Main
-{
-    public static void main(String[] args)
-    {
-        Workbook wb = null;
-        String filename = "cmpl.xlsx";
-        OPCPackage pkg = null;
-        if (filename.endsWith("xlsx") || filename.endsWith("xls"))
-        {
-            boolean isXLSX = (filename.endsWith("xlsx"));
-            ArrayList<Item> pricelist = new ArrayList<>();
+public class Main {
+   public static void main(String[] args) {
+      Workbook wb = null;
+      String filename = "cmpl.xlsx";
+      OPCPackage pkg = null;
 
-            try
-            {
-                InputStream inp = new FileInputStream(filename);
+      if (filename.endsWith("xlsx") || filename.endsWith("xls")) {
+         boolean isXLSX = (filename.endsWith("xlsx"));
+         ArrayList<Item> pricelist = new ArrayList<>();
 
-                if (isXLSX)
-                {
-                    // XSSFWorkbook, File (slower, but uses less memory)
+         try {
+            InputStream inp = new FileInputStream(filename);
+
+            if (isXLSX) {
+               // XSSFWorkbook, File (slower, but uses less memory)
 //                pkg = OPCPackage.open(new File(filename));
 
-                    // XSSFWorkbook, InputStream, faster, but needs more memory
-                    wb = new XSSFWorkbook(OPCPackage.open(inp));
-                }
-                else
-                {
-                    wb = new HSSFWorkbook(new POIFSFileSystem(inp));
+               // XSSFWorkbook, InputStream, faster, but needs more memory
+               pkg = OPCPackage.open(inp);
+               wb = new XSSFWorkbook(pkg);
+            } else {
+               wb = new HSSFWorkbook(new POIFSFileSystem(inp));
 
                 /*
                 ExcelExtractor extractor = new ExcelExtractor(wb);
@@ -48,95 +43,94 @@ public class Main
                 String text = extractor.getText();
                 System.out.println(text);
                 */
-                }
+            }
 
-                Item item = new Item();
-                Cell cell;
-                int id;
-                String title;
-                String sklad;
-                double rosnichPrice;
-                double optPrice;
-                double dilPrice;
-                double gar;
+            Item item = new Item();
+            Cell cell;
+            int id;
+            String title;
+            String sklad;
+            double rosnichPrice;
+            double optPrice;
+            double dilPrice;
+            double gar;
 
-                for (Sheet sheet : wb)
-                {
-                    for (Row row : sheet)
-                    {
-                    /*
+            for (Sheet sheet : wb) {
+               for (Row row : sheet) {
+/*
                     for (Cell cell : row)
                     {
                         //System.out.print(cell + "\t");
                     }
                     System.out.println();
 */
-                        cell = row.getCell(0);
-                        if (cell != null && cell.getCellType() == CellType.NUMERIC)
-                        {
-                            id = (int) cell.getNumericCellValue();
-                            title = row.getCell(1).getStringCellValue();
-                            sklad = row.getCell(2).getStringCellValue();
-                            rosnichPrice = row.getCell(3).getNumericCellValue();
-                            optPrice = row.getCell(4).getNumericCellValue();
-                            dilPrice = row.getCell(5).getNumericCellValue();
-                            gar = row.getCell(6).getNumericCellValue();
-                            item = new Item(id, title, sklad, rosnichPrice, optPrice, dilPrice, gar);
-                            item.tryToConvert();
-                            pricelist.add(item);
-                            // System.out.println(item.toString());
-                        }
-                    }
-                }
-                wb.close();
-
-                if (pkg != null)
-                {
-                    pkg.close();
-                }
-            } catch (FileNotFoundException | InvalidFormatException e)
-            {
-                System.out.println(e.getLocalizedMessage());
-            } catch (IOException e)
-            {
-                System.out.println(e.getLocalizedMessage());
+                  cell = row.getCell(0);
+                  if (cell != null && cell.getCellType() == CellType.NUMERIC) {
+                     id = (int) cell.getNumericCellValue();
+                     title = row.getCell(1).getStringCellValue();
+                     sklad = row.getCell(2).getStringCellValue();
+                     rosnichPrice = row.getCell(3).getNumericCellValue();
+                     optPrice = row.getCell(4).getNumericCellValue();
+                     dilPrice = row.getCell(5).getNumericCellValue();
+                     gar = row.getCell(6).getNumericCellValue();
+                     item = new Item(id, title, sklad, rosnichPrice, optPrice, dilPrice, gar);
+                     pricelist.add(item);
+                     // System.out.println(item.toString());
+                  }
+               }
             }
-            System.out.println("\n\n\n\n\n\n");
-            System.out.println(SearchByTitle(pricelist, "USB"));
+            wb.close();
 
-            System.out.println(SearchByPrice(pricelist, 30));
-
-            ArrayList<Item> Logitech_cheaper_200 = SearchByPrice(SearchByTitle(pricelist, "Logitech"), 200);
-            for (Item item : Logitech_cheaper_200)
-                System.out.println(item);
-        } else
-        {
-            System.out.println("Given file is NOT Microsoft Excel file!");
-        }
-    }
-
-    public static ArrayList<Item> SearchByPrice(ArrayList<Item> pricelist, double rosnichPrice) {
-        ArrayList<Item> temp = new ArrayList<>();
-        for (Item item : pricelist) {
-            if (item.rosnichPrice < rosnichPrice) {
-                //System.out.println(item);
-                temp.add(item);
+            if (pkg != null) {
+               pkg.close();
             }
-        }
-        return temp;
-    }
+         } catch (FileNotFoundException | InvalidFormatException e) {
+            System.out.println(e.getLocalizedMessage());
+         } catch (IOException e) {
+            System.out.println(e.getLocalizedMessage());
+         }
+
+         printList("\n-------------------- Items with keyword: \"USB\" --------------------\n", SearchByTitle(pricelist, "USB"));
+
+         printList("\n-------------------- Items with price under 30 --------------------\n", SearchByPrice(pricelist, 30));
+
+         ArrayList<Item> Logitech_cheaper_200 = SearchByPrice(SearchByTitle(pricelist, "Logitech"), 200);
+         printList("\n-------------------- Items with keyword: \"Logitech\" and price under 200 --------------------\n", Logitech_cheaper_200);
+      } else {
+         System.out.println("Given file is NOT Microsoft Excel file!");
+      }
+   }
+
+   public static ArrayList<Item> SearchByPrice(ArrayList<Item> pricelist, double rosnichPrice) {
+      ArrayList<Item> temp = new ArrayList<>();
+      for (Item item : pricelist) {
+         if (item.rosnichPrice < rosnichPrice) {
+            //System.out.println(item);
+            temp.add(item);
+         }
+      }
+      return temp;
+   }
 
 
-    public static ArrayList<Item> SearchByTitle(ArrayList<Item> pricelist, String title) {
-        ArrayList<Item> temp = new ArrayList<>();
-        for (Item item : pricelist) {
-            if (item.title.contains(title)) {
-                //System.out.println(item);
-                temp.add(item);
-            }
-        }
-        return temp;
-    }
+   public static ArrayList<Item> SearchByTitle(ArrayList<Item> pricelist, String title) {
+      ArrayList<Item> temp = new ArrayList<>();
+      for (Item item : pricelist) {
+         if (item.title.contains(title)) {
+            //System.out.println(item);
+            temp.add(item);
+         }
+      }
+      return temp;
+   }
+
+   public static void printList(String header, ArrayList<Item> pricelist) {
+      System.out.println(header);
+      for (Item item : pricelist) {
+         System.out.println(item);
+
+      }
+   }
 }
 
 
