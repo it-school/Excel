@@ -1,0 +1,19 @@
+<changelist name="Uncommitted_changes_before_rebase_[Changes]" date="1639516629613" recycled="true" deleted="true">
+  <option name="PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_rebase_[Changes]/shelved.patch" />
+  <option name="DESCRIPTION" value="Uncommitted changes before rebase [Changes]" />
+  <binary>
+    <option name="BEFORE_PATH" value="out/production/XLS/itschool/Items.class" />
+    <option name="AFTER_PATH" value="out/production/XLS/itschool/Items.class" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_rebase_[Changes]/Items.class" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="out/production/XLS/itschool/Item.class" />
+    <option name="AFTER_PATH" value="out/production/XLS/itschool/Item.class" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_rebase_[Changes]/Item.class" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="out/production/XLS/itschool/Main.class" />
+    <option name="AFTER_PATH" value="out/production/XLS/itschool/Main.class" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_rebase_[Changes]/Main.class" />
+  </binary>
+</changelist>

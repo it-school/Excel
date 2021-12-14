@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="psec-java">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/lib/psec-java.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
