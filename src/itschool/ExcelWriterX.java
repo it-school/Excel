@@ -11,7 +11,6 @@ import java.io.File;
  * Example of creating new XLSX file with data
  */
 public class ExcelWriterX extends WriteExcel {
-   private final int MONTHS = 12;
    private WriteExcel wrtExcel;
 
    public void run(final String filename) throws Exception {
@@ -41,14 +40,15 @@ public class ExcelWriterX extends WriteExcel {
       double quarterRevenue = 0.0;
       int totalSales = 0;
       double totalRevenue = 0.0;
-      for (int i = 0; i < MONTHS; i++) {
-         area.addRow(String.format("{:R}%s/%d/%.2f/%.2f", months[i], sales[i], prices[i], prices[i] * sales[i]).split("/"), i + 1);
-         quarterSales += sales[i];
-         quarterRevenue += prices[i] * sales[i];
-         totalSales += sales[i];
-         totalRevenue += prices[i] * sales[i];
-         if (quarter[i] > 0) {
-            area.addRow(String.format("{:Rb}Квартал %d/%d/%.2f/%.2f", quarter[i], quarterSales, quarterRevenue / quarterSales, quarterRevenue).split("/"), "#quarter");
+      int MONTHS = 12;
+      for (int month = 0; month < MONTHS; month++) {
+         area.addRow(String.format("{:R}%s/%d/%.2f/%.2f", months[month], sales[month], prices[month], prices[month] * sales[month]).split("/"), month + 1);
+         quarterSales += sales[month];
+         quarterRevenue += prices[month] * sales[month];
+         totalSales += sales[month];
+         totalRevenue += prices[month] * sales[month];
+         if (quarter[month] > 0) {
+            area.addRow(String.format("{:Rb}Квартал %d/%d/%.2f/%.2f", quarter[month], quarterSales, quarterRevenue / quarterSales, quarterRevenue).split("/"), "#quarter");
             quarterSales = 0;
             quarterRevenue = 0.0;
          }

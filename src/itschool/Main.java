@@ -105,38 +105,39 @@ public class Main {
          }
 
          final long finish = System.currentTimeMillis();  // benchmarking is finished
-         System.out.println(finish - start + " ms\n");
+         System.out.println(finish - start + " ms\n\n\n");
 
-         System.out.println("\n\n");
+
+         // Received data manipulation
 
          final Items priceListFull = new Items(priceList);
          System.out.println(priceListFull);
 
-         final Items logitechList = priceListFull.searchByTitle("Logitech");
-         System.out.println(logitechList);
-         System.out.println(logitechList.getList().size());
+         final Items logitechOnly = priceListFull.searchByTitle("Logitech");
+         System.out.println(logitechOnly);
+         System.out.println(logitechOnly.getList().size());
 
-         final Items sublist2 = priceListFull.searchByPriceLower(20);
-         System.out.println(sublist2);
+         final Items cheapest = priceListFull.searchByPriceLower(20);
+         System.out.println(cheapest);
 
-         final Items sublist3 = logitechList.searchByPriceLower(400).searchByTitle("USB");
-         System.out.println(sublist3);
-         sublist3.sort(Item.byTitleAscending);
-         System.out.println("\nSort by title: \n" + sublist3);
+         final Items cheapUSB = logitechOnly.searchByPriceLower(400).searchByTitle("USB");
+         System.out.println(cheapUSB);
+         cheapUSB.sort(Item.byTitleAscending);
+         System.out.println("\nSort by title: \n" + cheapUSB);
 
-         sublist3.sort(Item.byIDDescending);
-         System.out.println("\nSort by id descending: \n" + sublist3);
+         cheapUSB.sort(Item.byIDDescending);
+         System.out.println("\nSort by id descending: \n" + cheapUSB);
 
          System.out.println("\n\nSort by price ASC\n");
-         System.out.println(Items.sortCopy(sublist2, Item.byRetailPriceDesc)); // Sort without changing source list data
-         System.out.println(sublist2);
-         sublist2.sort(Item.byRetailPriceAsc);  // Sort with changing source list data
-         System.out.println(sublist2);
+         System.out.println(Items.sortCopy(cheapest, Item.byRetailPriceDesc)); // Sort without changing source list data
+         System.out.println(cheapest);
+         cheapest.sort(Item.byRetailPriceAsc);  // Sort with changing source list data
+         System.out.println(cheapest);
 
-         System.out.println(sublist2.searchByTitle("BNC"));
+         System.out.println(cheapest.searchByTitle("BNC"));
          System.out.println("Sort by price DESC");
-         sublist2.sort(Item.byRetailPriceDesc);
-         System.out.println(sublist2);
+         cheapest.sort(Item.byRetailPriceDesc);
+         System.out.println(cheapest);
 
          final Items logitechCheaper200 = priceListFull.searchByPriceLower(200).searchByTitle("Transcend");
          System.out.println(logitechCheaper200);
