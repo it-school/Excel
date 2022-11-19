@@ -1,3 +1,6 @@
+// This is a personal academic project. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: https://pvs-studio.com
+
 package itschool;
 
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
@@ -7,10 +10,10 @@ import org.apache.poi.poifs.filesystem.POIFSFileSystem;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,40 +25,38 @@ public class Main {
     *
     * @throws Exception if not correct XL
     */
-   public static void main(String[] args) throws Exception {
-      excelRead();
-      excelWrite();
+   public static void main(final String[] args) throws Exception {
+      excelRead("cmpl.xls");
+      excelWrite("test.xlsx");
    }
 
    //  https://poi.apache.org/apidocs/index.html
 
    /**
-    * Method to read data from Excel file
+    * Example of reading data from Excel file
     */
-   private static void excelRead() {
-      long start = System.currentTimeMillis();
+   private static void excelRead(String fileName) {
+      final long start = System.currentTimeMillis();  // benchmarking started
+      fileName = fileName.strip().toLowerCase();
 
-      Workbook wb = null;
-      String filename = "cmpl.xls";
-      OPCPackage pkg = null;
-      List<Item> pricelist = new ArrayList<>();
-
-      if (filename.toLowerCase().endsWith("xlsx") || filename.toLowerCase().endsWith("xls")) {
-         boolean isXLSX = (filename.endsWith("xlsx"));
+      if (fileName.endsWith("xlsx") || fileName.endsWith("xls")) {
+         final List<Item> priceList = new ArrayList<>();
 
          try {
-            InputStream inp = new FileInputStream(filename);
+            final InputStream inputStream = Files.newInputStream(Paths.get(fileName));
+            final Workbook workbook;
 
-            if (isXLSX) {
-               // XSSFWorkbook, File (slower, but uses less memory)
-               pkg = OPCPackage.open(new File(filename));
-               // XSSFWorkbook, InputStream, faster, but needs more memory
-               wb = new XSSFWorkbook(OPCPackage.open(inp));
+            if (fileName.endsWith("xlsx")) {
+               OPCPackage opcPackage = OPCPackage.open(inputStream);    // using InputStream is faster, but needs LESS RAM
+               // opcPackage = OPCPackage.open(new File(fileName));     // using File        is slower, but uses MORE RAM
+               workbook = new XSSFWorkbook(opcPackage);
+               opcPackage.close();
             } else {
-               POIFSFileSystem is = new POIFSFileSystem(inp);
-               wb = new HSSFWorkbook(is);
+               POIFSFileSystem poifsFileSystem = new POIFSFileSystem(inputStream);
+               workbook = new HSSFWorkbook(poifsFileSystem);
+               poifsFileSystem.close();
                /*
-                  ExcelExtractor extractor = new ExcelExtractor(wb);
+                  ExcelExtractor extractor = new ExcelExtractor(workbook);
                   extractor.setFormulasNotResults(true);
                   extractor.setIncludeSheetNames(false);
                   String text = extractor.getText();
@@ -63,18 +64,17 @@ public class Main {
                */
             }
 
-            Item item = new Item();
             Cell cell;
             int id;
             String title;
-            String sklad;
-            double rosnichPrice;
-            double optPrice;
-            double dilPrice;
-            double gar;
+            String warehouse;
+            double retailPrice;
+            double wholesalePrice;
+            double dealerPrice;
+            double guarantee;
 
-            for (Sheet sheet : wb) {
-               for (Row row : sheet) {
+            for (final Sheet sheet : workbook) {
+               for (final Row row : sheet) {
 /*
                     for (Cell cell : row)
                     {
@@ -89,40 +89,37 @@ public class Main {
                   } else if (cell.getCellType() == CellType.NUMERIC) {
                      id = (int) cell.getNumericCellValue();
                      title = row.getCell(1).getStringCellValue();
-                     sklad = row.getCell(2).getStringCellValue();
-                     rosnichPrice = row.getCell(3).getNumericCellValue();
-                     optPrice = row.getCell(4).getNumericCellValue();
-                     dilPrice = row.getCell(5).getNumericCellValue();
-                     gar = row.getCell(6).getNumericCellValue();
-                     item = new Item(id, title, sklad, rosnichPrice, optPrice, dilPrice, gar);
-                     pricelist.add(item);
-                     // System.out.println(item.toString());
+                     warehouse = row.getCell(2).getStringCellValue();
+                     retailPrice = row.getCell(3).getNumericCellValue();
+                     wholesalePrice = row.getCell(4).getNumericCellValue();
+                     dealerPrice = row.getCell(5).getNumericCellValue();
+                     guarantee = row.getCell(6).getNumericCellValue();
+                     priceList.add(new Item(id, title, warehouse, retailPrice, wholesalePrice, dealerPrice, guarantee));
                   }
                }
             }
-            wb.close();
-
-            if (pkg != null) pkg.close();
+            workbook.close();
+            inputStream.close();
          } catch (InvalidFormatException | IOException e) {
             System.out.println(e.getLocalizedMessage());
          }
 
-         long finish = System.currentTimeMillis();
+         final long finish = System.currentTimeMillis();  // benchmarking is finished
          System.out.println(finish - start + " ms\n");
 
          System.out.println("\n\n");
 
-         Items priceListFull = new Items(pricelist);
+         final Items priceListFull = new Items(priceList);
          System.out.println(priceListFull);
 
-         Items LogitechList = priceListFull.SearchByTitle("Logitech");
-         System.out.println(LogitechList);
-         System.out.println(LogitechList.list.size());
+         final Items logitechList = priceListFull.searchByTitle("Logitech");
+         System.out.println(logitechList);
+         System.out.println(logitechList.getList().size());
 
-         Items sublist2 = priceListFull.SearchByPriceLowerThan(20);
+         final Items sublist2 = priceListFull.searchByPriceLower(20);
          System.out.println(sublist2);
 
-         Items sublist3 = LogitechList.SearchByPriceLowerThan(400).SearchByTitle("USB");
+         final Items sublist3 = logitechList.searchByPriceLower(400).searchByTitle("USB");
          System.out.println(sublist3);
          sublist3.sort(Item.byTitleAscending);
          System.out.println("\nSort by title: \n" + sublist3);
@@ -131,18 +128,18 @@ public class Main {
          System.out.println("\nSort by id descending: \n" + sublist3);
 
          System.out.println("\n\nSort by price ASC\n");
-         System.out.println(Items.sortCopy(sublist2, Item.byPriceDesc)); // Sort without changing source list data
+         System.out.println(Items.sortCopy(sublist2, Item.byRetailPriceDesc)); // Sort without changing source list data
          System.out.println(sublist2);
-         sublist2.sort(Item.byPriceAsc);  // Sort with changing source list data
+         sublist2.sort(Item.byRetailPriceAsc);  // Sort with changing source list data
          System.out.println(sublist2);
 
-         System.out.println(sublist2.SearchByTitle("BNC"));
+         System.out.println(sublist2.searchByTitle("BNC"));
          System.out.println("Sort by price DESC");
-         sublist2.sort(Item.byPriceDesc);
+         sublist2.sort(Item.byRetailPriceDesc);
          System.out.println(sublist2);
 
-         Items Logitech_cheaper_200 = priceListFull.SearchByPriceLowerThan(200).SearchByTitle("Transcend");
-         System.out.println(Logitech_cheaper_200);
+         final Items logitechCheaper200 = priceListFull.searchByPriceLower(200).searchByTitle("Transcend");
+         System.out.println(logitechCheaper200);
 
       } else {
          System.out.println("Given file is NOT Microsoft Excel file!");
@@ -150,12 +147,12 @@ public class Main {
    }
 
    /**
-    * Method to write data to Excel file
+    * Example of writing data to created Excel file (XLSX)
     *
     * @throws Exception if error occurs
     */
-   private static void excelWrite() throws Exception {
-      ExcelWriterX writeXLS = new ExcelWriterX();
-      writeXLS.run("test.xlsx");
+   private static void excelWrite(final String fileName) throws Exception {
+      final ExcelWriterX writeXLS = new ExcelWriterX();
+      writeXLS.run(fileName);
    }
 }

@@ -6,26 +6,29 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
+/**
+ * Price-list of items with additional methods
+ */
 public class Items {
-   List<Item> list;
+   private final List<Item> list;
    private LocalDate date;
 
-   public Items(List<Item> sublist1) {
-      this.list = sublist1;
+   public Items(final List<Item> sublist) {
+      this.list = sublist;
    }
 
    public Items() {
       this.list = new ArrayList<>();
-      date = LocalDate.now();
+      this.date = LocalDate.now();
    }
 
-   public Items(LocalDate date) {
+   public Items(final LocalDate date) {
       this.list = new ArrayList<>();
-      this.date = (Period.between(date, LocalDate.now()).isNegative() ? date : LocalDate.now());
+      this.date = Period.between(date, LocalDate.now()).isNegative() ? date : LocalDate.now();
    }
 
-   public static Items sortCopy(Items items, Comparator comparator) {
-      Items temp = new Items();
+   public static Items sortCopy(final Items items, final Comparator comparator) {
+      final Items temp = new Items();
 
       temp.list.addAll(items.list);
 /*      for (int i = 0; i < items.list.size(); i++) {
@@ -36,38 +39,42 @@ public class Items {
       return temp;
    }
 
+   public List<Item> getList() {
+      return list;
+   }
+
    public LocalDate getDate() {
       return date;
    }
 
    @Override
    public String toString() {
-      StringBuilder result = new StringBuilder();
+      final StringBuilder result = new StringBuilder();
 
-      for (Item item : list) {
+      for (final Item item : list) {
          result.append(System.lineSeparator()).append(item);
       }
       return result.toString();
    }
 
-   public void sort(Comparator comparator) {
+   public void sort(final Comparator comparator) {
       this.list.sort(comparator);
    }
 
-   public Items SearchByPriceLowerThan(double rosnichPrice) {
-      List<Item> temp = new ArrayList<>();
-      for (Item item : this.list) {
-         if (item.rosnichPrice < rosnichPrice) {
+   public Items searchByPriceLower(final double rosnichPrice) {
+      final List<Item> temp = new ArrayList<>();
+      for (final Item item : this.list) {
+         if (item.getRetailPrice() < rosnichPrice) {
             temp.add(item);
          }
       }
       return new Items(temp);
    }
 
-   public Items SearchByTitle(String title) {
-      List<Item> temp = new ArrayList<>();
-      for (Item item : this.list) {
-         if (item.title.toLowerCase().contains(title.toLowerCase())) {
+   public Items searchByTitle(final String title) {
+      final List<Item> temp = new ArrayList<>();
+      for (final Item item : this.list) {
+         if (item.getTitle().toLowerCase().contains(title.toLowerCase())) {
             temp.add(item);
          }
       }
